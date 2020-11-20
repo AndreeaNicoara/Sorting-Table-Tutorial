@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>Sorting Table tutorial</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="./style/style.css">
+  <script>
+    hljs.initHighlightingOnLoad();
+  </script>
+</head>
+
+<body>
+
+  <h2>Creating the table in HTML :</h2>
+  <h3>Firstly, we create the table heads and give them an onclick action to run the sorting functions created in JavaScript.</h3>
+  <div style="background:#282C34;overflow:auto;margin-left:50px;width:800px;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+    <pre style="margin: 0; line-height: 125%">  <span style="color: #f92672">&lt;tr</span> <span style="color: #a6e22e">id=</span><span style="color: #e6db74">&quot;thead&quot;</span><span style="color: #f92672">&gt;</span>
+      <span style="color: #f92672">&lt;th</span> <span style="color: #a6e22e">style=</span><span style="color: #e6db74">&quot;cursor: pointer;&quot;</span> <span style="color: #a6e22e">onclick=</span><span style="color: #e6db74">&quot;sortAlphabetically(0)&quot;</span><span style="color: #f92672">&gt;</span><span style="color:white">Team Name</span><span style="color: #f92672">&lt;/th&gt;</span>
+      <span style="color: #f92672">&lt;th</span> <span style="color: #a6e22e">style=</span><span style="color: #e6db74">&quot;cursor: pointer;&quot;</span> <span style="color: #a6e22e">onclick=</span><span style="color: #e6db74">&quot;sortNumerically(1)&quot;</span><span style="color: #f92672">&gt;</span><span style="color:white">Wins</span><span style="color: #f92672">&lt;/th&gt;</span>
+      <span style="color: #f92672">&lt;th</span> <span style="color: #a6e22e">style=</span><span style="color: #e6db74">&quot;cursor: pointer;&quot;</span> <span style="color: #a6e22e">onclick=</span><span style="color: #e6db74">&quot;sortNumerically(2)&quot;</span><span style="color: #f92672">&gt;</span><span style="color:white">Draws</span><span style="color: #f92672">&lt;/th&gt;</span>
+      <span style="color: #f92672">&lt;th</span> <span style="color: #a6e22e">style=</span><span style="color: #e6db74">&quot;cursor: pointer;&quot;</span> <span style="color: #a6e22e">onclick=</span><span style="color: #e6db74">&quot;sortNumerically(3)&quot;</span><span style="color: #f92672">&gt;</span><span style="color:white">Losses</span><span style="color: #f92672">&lt;/th&gt;</span>
+      <span style="color: #f92672">&lt;th</span> <span style="color: #a6e22e">style=</span><span style="color: #e6db74">&quot;cursor: pointer;&quot;</span> <span style="color: #a6e22e">onclick=</span><span style="color: #e6db74">&quot;sortNumerically(4)&quot;</span><span style="color: #f92672">&gt;</span><span style="color:white">Points</span><span style="color: #f92672">&lt;/th&gt;</span>
+  <span style="color: #f92672">&lt;/tr&gt;</span>
+    </pre>
+  </div>
+  <h3>Next, we create the table's rows, such as follows:</h3>
+  <div style="background:#282C34;overflow:auto;margin-left:50px;width:800px;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+    <pre style="margin: 0; line-height: 125%">  <span style="color: #f92672">&lt;tr&gt;</span>
+      <span style="color: #f92672">&lt;td&gt;</span><span style="color:white">Sonderjyske</span><span style="color: #f92672">&lt;/td&gt;</span>
+      <span style="color: #f92672">&lt;td&gt;</span><span style="color:white">5</span><span style="color: #f92672">&lt;/td&gt;</span>
+      <span style="color: #f92672">&lt;td&gt;</span><span style="color:white">2</span><span style="color: #f92672">&lt;/td&gt;</span>
+      <span style="color: #f92672">&lt;td&gt;</span><span style="color:white">1</span><span style="color: #f92672">&lt;/td&gt;</span>
+      <span style="color: #f92672">&lt;td&gt;</span><span style="color:white">17</span><span style="color: #f92672">&lt;/td&gt;</span>
+  <span style="color: #f92672">&lt;/tr&gt;</span>
+    </pre>
+  </div>
+  <h3>The styling of the table can be customized in CSS as desired.</h3>
+  <br>
+  <h2>Sorting alphabetically :</h2>
+  <h3>In JavaScript, we want to create a loop that continues until no changes occur. Initially, we loop through all the rows -1 (to exclude headers), then we compare two elements from two neighboring rows and check if they should switch place. If
+    that's the case, we force a switch, mark it and stop the loop. Whenever a switch is done, we increase the count by 1 and continue. When the switching is complete in one direxction, we change the direction and run the same loop again, but the
+    opposite way.</h3>
+  <div style="background:#282C34;overflow:auto;margin-left:50px;width:800px;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+    <pre style="margin: 0; line-height: 125%"><span style="color: #4ded30">&#39;use strict&#39;</span><span style="color: #d0d0d0">;</span>
+  <span style="color: #af94e1; font-weight: bold">function</span> <span style="color: #d0d0d0">sortAlphabetically(n)</span> <span style="color: #d0d0d0">{</span>
+    <span style="color: #af94e1; font-weight: bold">var</span> <span style="color: #d0d0d0">table,</span> <span style="color: #d0d0d0">rows,</span> <span style="color: #d0d0d0">switching,</span> <span style="color: #d0d0d0">i,</span> <span style="color: #d0d0d0">x,</span> <span style="color: #d0d0d0">y,</span> <span style="color: #d0d0d0">shouldSwitch,</span> <span style="color: #d0d0d0">dir,</span> <span style="color: #d0d0d0">switchcount</span> <span style="color: #d0d0d0">=</span> <span style="color: #3677a9">0</span><span style="color: #d0d0d0">;</span>
+    <span style="color: #d0d0d0">table</span> <span style="color: #d0d0d0">=</span> <span style="color: #24909d">document</span><span style="color: #d0d0d0">.getElementById(</span><span style="color: #4ded30">&quot;myTable&quot;</span><span style="color: #d0d0d0">);</span>
+    <span style="color: #d0d0d0">switching</span> <span style="color: #d0d0d0">=</span> <span style="color: #af94e1; font-weight: bold">true</span><span style="color: #d0d0d0">;</span>
+    <span style="color: #d0d0d0">dir</span> <span style="color: #d0d0d0">=</span> <span style="color: #4ded30">&quot;asc&quot;</span><span style="color: #d0d0d0">;</span>
+    <span style="color: #af94e1; font-weight: bold">while</span> <span style="color: #d0d0d0">(switching)</span> <span style="color: #d0d0d0">{</span>
+      <span style="color: #d0d0d0">switching</span> <span style="color: #d0d0d0">=</span> <span style="color: #af94e1; font-weight: bold">false</span><span style="color: #d0d0d0">;</span>
+      <span style="color: #d0d0d0">rows</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">table.rows;</span>
+      <span style="color: #af94e1; font-weight: bold">for</span> <span style="color: #d0d0d0">(i</span> <span style="color: #d0d0d0">=</span> <span style="color: #3677a9">1</span><span style="color: #d0d0d0">;</span> <span style="color: #d0d0d0">i</span> <span style="color: #d0d0d0">&lt;</span> <span style="color: #d0d0d0">(rows.length</span> <span style="color: #d0d0d0">-</span> <span style="color: #3677a9">1</span><span style="color: #d0d0d0">);</span> <span style="color: #d0d0d0">i++)</span> <span style="color: #d0d0d0">{</span>
+        <span style="color: #d0d0d0">shouldSwitch</span> <span style="color: #d0d0d0">=</span> <span style="color: #af94e1; font-weight: bold">false</span><span style="color: #d0d0d0">;</span>
+        <span style="color: #d0d0d0">x</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">rows[i].getElementsByTagName(</span><span style="color: #4ded30">&quot;TD&quot;</span><span style="color: #d0d0d0">)[n];</span>
+        <span style="color: #d0d0d0">y</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">rows[i</span> <span style="color: #d0d0d0">+</span> <span style="color: #3677a9">1</span><span style="color: #d0d0d0">].getElementsByTagName(</span><span style="color: #4ded30">&quot;TD&quot;</span><span style="color: #d0d0d0">)[n];</span>
+        <span style="color: #af94e1; font-weight: bold">if</span> <span style="color: #d0d0d0">(dir</span> <span style="color: #d0d0d0">==</span> <span style="color: #4ded30">&quot;asc&quot;</span><span style="color: #d0d0d0">)</span> <span style="color: #d0d0d0">{</span>
+          <span style="color: #af94e1; font-weight: bold">if</span> <span style="color: #d0d0d0">(x.innerHTML.toLowerCase()</span> <span style="color: #d0d0d0">&gt;</span> <span style="color: #d0d0d0">y.innerHTML.toLowerCase())</span> <span style="color: #d0d0d0">{</span>
+            <span style="color: #d0d0d0">shouldSwitch=</span> <span style="color: #af94e1; font-weight: bold">true</span><span style="color: #d0d0d0">;</span>
+            <span style="color: #af94e1; font-weight: bold">break</span><span style="color: #d0d0d0">;</span>
+          <span style="color: #d0d0d0">}</span>
+        <span style="color: #d0d0d0">}</span> <span style="color: #af94e1; font-weight: bold">else</span> <span style="color: #af94e1; font-weight: bold">if</span> <span style="color: #d0d0d0">(dir</span> <span style="color: #d0d0d0">==</span> <span style="color: #4ded30">&quot;desc&quot;</span><span style="color: #d0d0d0">)</span> <span style="color: #d0d0d0">{</span>
+          <span style="color: #af94e1; font-weight: bold">if</span> <span style="color: #d0d0d0">(x.innerHTML.toLowerCase()</span> <span style="color: #d0d0d0">&lt;</span> <span style="color: #d0d0d0">y.innerHTML.toLowerCase())</span> <span style="color: #d0d0d0">{</span>
+   <span style="color: #d0d0d0">shouldSwitch</span> <span style="color: #d0d0d0">=</span> <span style="color: #af94e1; font-weight: bold">true</span><span style="color: #d0d0d0">;</span>
+            <span style="color: #af94e1; font-weight: bold">break</span><span style="color: #d0d0d0">;</span>
+          <span style="color: #d0d0d0">}</span>
+        <span style="color: #d0d0d0">}</span>
+      <span style="color: #d0d0d0">}</span>
+      <span style="color: #af94e1; font-weight: bold">if</span> <span style="color: #d0d0d0">(shouldSwitch)</span> <span style="color: #d0d0d0">{</span>
+        <span style="color: #d0d0d0">rows[i].parentNode.insertBefore(rows[i</span> <span style="color: #d0d0d0">+</span> <span style="color: #3677a9">1</span><span style="color: #d0d0d0">],</span> <span style="color: #d0d0d0">rows[i]);</span>
+        <span style="color: #d0d0d0">switching</span> <span style="color: #d0d0d0">=</span> <span style="color: #af94e1; font-weight: bold">true</span><span style="color: #d0d0d0">;</span>
+        <span style="color: #d0d0d0">switchcount</span> <span style="color: #d0d0d0">++;</span>
+      <span style="color: #d0d0d0">}</span> <span style="color: #af94e1; font-weight: bold">else</span> <span style="color: #d0d0d0">{</span>
+        <span style="color: #af94e1; font-weight: bold">if</span> <span style="color: #d0d0d0">(switchcount</span> <span style="color: #d0d0d0">==</span> <span style="color: #3677a9">0</span> <span style="color: #d0d0d0">&amp;&amp;</span> <span style="color: #d0d0d0">dir</span> <span style="color: #d0d0d0">==</span> <span style="color: #4ded30">&quot;asc&quot;</span><span style="color: #d0d0d0">)</span> <span style="color: #d0d0d0">{</span>
+          <span style="color: #d0d0d0">dir</span> <span style="color: #d0d0d0">=</span> <span style="color: #4ded30">&quot;desc&quot;</span><span style="color: #d0d0d0">;</span>
+          <span style="color: #d0d0d0">switching</span> <span style="color: #d0d0d0">=</span> <span style="color: #af94e1; font-weight: bold">true</span><span style="color: #d0d0d0">;</span>
+        <span style="color: #d0d0d0">}</span>
+      <span style="color: #d0d0d0">}</span>
+    <span style="color: #d0d0d0">}</span>
+  <span style="color: #d0d0d0">}</span>
+  </pre>
+  </div>
+
+  <br><br><br>
+  <h2>Sorting numerically:</h2>
+  <h3>To sort numerically instead of alphabetically, we follow the same logic and pattern.</h3>
+  <div style="background:#282C34;overflow:auto;margin-left:50px;width:800px;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+    <pre style="margin: 0; line-height: 125%"><span style="color: #af94e1; font-weight: bold">function</span> <span style="color: #d0d0d0">sortNumerically(n)</span> <span style="color: #d0d0d0">{</span>
+  <span style="color: #af94e1; font-weight: bold">var</span> <span style="color: #d0d0d0">table,</span> <span style="color: #d0d0d0">rows,</span> <span style="color: #d0d0d0">switching,</span> <span style="color: #d0d0d0">i,</span> <span style="color: #d0d0d0">x,</span> <span style="color: #d0d0d0">y,</span> <span style="color: #d0d0d0">shouldSwitch,</span> <span style="color: #d0d0d0">dir,</span> <span style="color: #d0d0d0">switchcount=</span><span style="color: #3677a9">0</span><span style="color: #d0d0d0">;</span>
+  <span style="color: #d0d0d0">table</span> <span style="color: #d0d0d0">=</span> <span style="color: #24909d">document</span><span style="color: #d0d0d0">.getElementById(</span><span style="color: #4ded30">&quot;myTable&quot;</span><span style="color: #d0d0d0">);</span>
+  <span style="color: #d0d0d0">switching</span> <span style="color: #d0d0d0">=</span> <span style="color: #af94e1; font-weight: bold">true</span><span style="color: #d0d0d0">;</span>
+  <span style="color: #d0d0d0">dir=</span><span style="color: #4ded30">&quot;asc&quot;</span><span style="color: #d0d0d0">;</span>
+  <span style="color: #af94e1; font-weight: bold">while</span> <span style="color: #d0d0d0">(switching)</span> <span style="color: #d0d0d0">{</span>
+    <span style="color: #d0d0d0">rows</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">table.rows;</span>
+    <span style="color: #af94e1; font-weight: bold">for</span> <span style="color: #d0d0d0">(i</span> <span style="color: #d0d0d0">=</span> <span style="color: #3677a9">1</span><span style="color: #d0d0d0">;</span> <span style="color: #d0d0d0">i</span> <span style="color: #d0d0d0">&lt;</span> <span style="color: #d0d0d0">(rows.length</span> <span style="color: #d0d0d0">-</span> <span style="color: #3677a9">1</span><span style="color: #d0d0d0">);</span> <span style="color: #d0d0d0">i++)</span> <span style="color: #d0d0d0">{</span>
+      <span style="color: #d0d0d0">shouldSwitch</span> <span style="color: #d0d0d0">=</span> <span style="color: #af94e1; font-weight: bold">false</span><span style="color: #d0d0d0">;</span>
+      <span style="color: #d0d0d0">x</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">rows[i].getElementsByTagName(</span><span style="color: #4ded30">&quot;TD&quot;</span><span style="color: #d0d0d0">)[n];</span>
+      <span style="color: #d0d0d0">y</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">rows[i</span> <span style="color: #d0d0d0">+</span> <span style="color: #3677a9">1</span><span style="color: #d0d0d0">].getElementsByTagName(</span><span style="color: #4ded30">&quot;TD&quot;</span><span style="color: #d0d0d0">)[n];</span>
+      <span style="color: #af94e1; font-weight: bold">if</span><span style="color: #d0d0d0">(dir</span> <span style="color: #d0d0d0">==</span> <span style="color: #4ded30">&quot;asc&quot;</span><span style="color: #d0d0d0">)</span> <span style="color: #d0d0d0">{</span>
+      <span style="color: #af94e1; font-weight: bold">if</span> <span style="color: #d0d0d0">(</span><span style="color: #24909d">Number</span><span style="color: #d0d0d0">(x.innerHTML)</span> <span style="color: #d0d0d0">&gt;</span> <span style="color: #24909d">Number</span><span style="color: #d0d0d0">(y.innerHTML))</span> <span style="color: #d0d0d0">{</span>
+        <span style="color: #d0d0d0">shouldSwitch</span> <span style="color: #d0d0d0">=</span> <span style="color: #af94e1; font-weight: bold">true</span><span style="color: #d0d0d0">;</span>
+        <span style="color: #af94e1; font-weight: bold">break</span><span style="color: #d0d0d0">;</span>
+      <span style="color: #d0d0d0">}</span>
+    <span style="color: #d0d0d0">}</span> <span style="color: #af94e1; font-weight: bold">else</span> <span style="color: #af94e1; font-weight: bold">if</span> <span style="color: #d0d0d0">(dir</span> <span style="color: #d0d0d0">==</span> <span style="color: #4ded30">&quot;desc&quot;</span><span style="color: #d0d0d0">)</span> <span style="color: #d0d0d0">{</span>
+      <span style="color: #af94e1; font-weight: bold">if</span> <span style="color: #d0d0d0">(</span><span style="color: #24909d">Number</span><span style="color: #d0d0d0">(x.innerHTML)</span> <span style="color: #d0d0d0">&lt;</span> <span style="color: #24909d">Number</span><span style="color: #d0d0d0">(y.innerHTML))</span> <span style="color: #d0d0d0">{</span>
+        <span style="color: #d0d0d0">shouldSwitch</span> <span style="color: #d0d0d0">=</span> <span style="color: #af94e1; font-weight: bold">true</span><span style="color: #d0d0d0">;</span>
+        <span style="color: #af94e1; font-weight: bold">break</span><span style="color: #d0d0d0">;</span>
+      <span style="color: #d0d0d0">}</span>
+    <span style="color: #d0d0d0">}</span>
+  <span style="color: #d0d0d0">}</span>
+    <span style="color: #af94e1; font-weight: bold">if</span> <span style="color: #d0d0d0">(shouldSwitch)</span> <span style="color: #d0d0d0">{</span>
+      <span style="color: #d0d0d0">rows[i].parentNode.insertBefore(rows[i</span> <span style="color: #d0d0d0">+</span> <span style="color: #3677a9">1</span><span style="color: #d0d0d0">],</span> <span style="color: #d0d0d0">rows[i]);</span>
+      <span style="color: #d0d0d0">switching</span> <span style="color: #d0d0d0">=</span> <span style="color: #af94e1; font-weight: bold">true</span><span style="color: #d0d0d0">;</span>
+      <span style="color: #d0d0d0">switchcount</span> <span style="color: #d0d0d0">++;</span>
+    <span style="color: #d0d0d0">}</span> <span style="color: #af94e1; font-weight: bold">else</span> <span style="color: #d0d0d0">{</span>
+      <span style="color: #af94e1; font-weight: bold">if</span><span style="color: #d0d0d0">(switchcount</span> <span style="color: #d0d0d0">==</span> <span style="color: #3677a9">0</span> <span style="color: #d0d0d0">&amp;&amp;</span> <span style="color: #d0d0d0">dir</span> <span style="color: #d0d0d0">==</span> <span style="color: #4ded30">&quot;asc&quot;</span><span style="color: #d0d0d0">)</span> <span style="color: #d0d0d0">{</span>
+        <span style="color: #d0d0d0">dir</span> <span style="color: #d0d0d0">=</span> <span style="color: #4ded30">&quot;desc&quot;</span><span style="color: #d0d0d0">;</span>
+        <span style="color: #d0d0d0">switching</span> <span style="color: #d0d0d0">=</span> <span style="color: #af94e1; font-weight: bold">true</span><span style="color: #d0d0d0">;</span>
+      <span style="color: #d0d0d0">}</span>
+    <span style="color: #d0d0d0">}</span>
+  <span style="color: #d0d0d0">}</span>
+<span style="color: #d0d0d0">}</span>
+</pre>
+  </div>
+
+<h3>The only significant difference happens when we check if two neighboring rows should switch place. Instead of comparing the initial letter, we simply compare the numbers instead. </h3>
+<div style="background:#282C34;overflow:auto;margin-left:50px;width:800px;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;">
+  <pre style="margin: 0; line-height: 125%"><span style="color: #b19cd9; font-weight: bold">if</span> <span style="color: #d0d0d0">(</span><span style="color: #24909d">Number</span><span style="color: #d0d0d0">(x.innerHTML)</span> <span style="color: #d0d0d0">&gt;</span> <span style="color: #24909d">Number</span><span style="color: #d0d0d0">(y.innerHTML))</span> <span style="color: #d0d0d0">{</span>
+          <span style="color: #d0d0d0">shouldSwitch</span> <span style="color: #d0d0d0">=</span> <span style="color: #b19cd9; font-weight: bold">true</span><span style="color: #d0d0d0">;</span>
+          <span style="color: #b19cd9; font-weight: bold">break</span><span style="color: #d0d0d0">;</span>
+        <span style="color: #d0d0d0">}</span>
+      <span style="color: #d0d0d0">}</span> <span style="color: #b19cd9; font-weight: bold">else</span> <span style="color: #b19cd9; font-weight: bold">if</span> <span style="color: #d0d0d0">(dir</span> <span style="color: #d0d0d0">==</span> <span style="color: #4ded30">&quot;desc&quot;</span><span style="color: #d0d0d0">)</span> <span style="color: #d0d0d0">{</span>
+        <span style="color: #b19cd9; font-weight: bold">if</span> <span style="color: #d0d0d0">(</span><span style="color: #24909d">Number</span><span style="color: #d0d0d0">(x.innerHTML)</span> <span style="color: #d0d0d0">&lt;</span> <span style="color: #24909d">Number</span><span style="color: #d0d0d0">(y.innerHTML))</span> <span style="color: #d0d0d0">{</span>
+          <span style="color: #d0d0d0">shouldSwitch</span> <span style="color: #d0d0d0">=</span> <span style="color: #b19cd9; font-weight: bold">true</span><span style="color: #d0d0d0">;</span>
+          <span style="color: #b19cd9; font-weight: bold">break</span><span style="color: #d0d0d0">;</span>
+        <span style="color: #d0d0d0">}</span>
+  </pre></div>
+
+
+</body>
